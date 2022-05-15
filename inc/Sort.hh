@@ -7,6 +7,14 @@
 namespace Sort
 {
     template <typename T>
+    void swap(T &first, T &second)
+    {
+        T tmp = second;
+        second = first;
+        first = tmp;
+    }
+
+    template <typename T>
     void insertion_sort(T *data, int data_size)
     {
         T tmp;
@@ -14,9 +22,7 @@ namespace Sort
         {
             for (int j = i; j > 0 && data[j] < data[j - 1]; j--)
             {
-                tmp = data[j - 1];
-                data[j - 1] = data[j];
-                data[j] = tmp;
+                swap(data[j - 1], data[j]);
             }
         }
     }
@@ -56,73 +62,114 @@ namespace Sort
         delete[] buckets;
     }
 
+    template <typename T>
+    T median_of_three(T *data, int begin_index, int end_index)
+    {
+        int mid;
+        // begin {pivot search - Median-of-three}
+        mid = (begin_index + end_index) / 2;
+        if (data[mid] < data[begin_index])
+            swap(data[begin_index], data[mid]);
+        if (data[end_index] < data[begin_index])
+            swap(data[end_index], data[begin_index]);
+        if (data[mid] < data[end_index])
+            swap(data[end_index], data[mid]);
+        return data[end_index];
+        // end {pivot search - Median-of-three}
+    }
+    template <typename T>
+    int partition(T *data, int begin_index, int end_index)
+    {
+        int left_index, right_index;
+        T pivot;
+        pivot = median_of_three(data, begin_index, end_index);
+
+        // begin {partition array into two}
+        left_index = begin_index - 1;
+        right_index = end_index + 1;
+        while (1)
+        {
+            do
+            {
+                left_index += 1;
+            } while (data[left_index] < pivot);
+            do
+            {
+                right_index -= 1;
+            } while (data[right_index] > pivot);
+            if (left_index >= right_index)
+                return right_index;
+            swap(data[left_index], data[right_index]);
+        }
+        // end {partition array into two}
+    }
+
     // run tests check if it works correctly try some shit
     template <typename T>
-    void quick_sort(T *data, int low_index, int high_index)
+    void quick_sort(T *data, int begin_index, int end_index)
     {
-        int pivot_index, mid, left_index, right_index;
-        T pivot, tmp;
-        if (low_index >= 0 && high_index >= 0 && low_index < high_index)
+        int pivot_index;
+        if (begin_index >= 0 && end_index >= 0 && begin_index < end_index)
         {
-            // begin {partition}
-            // begin {pivot search - Median-of-three}
-            mid = (low_index + high_index) / 2;
-            if (data[mid] < data[low_index])
-            {
-                tmp = data[low_index];
-                data[low_index] = data[mid];
-                data[mid] = tmp;
-            }
-            if (data[high_index] < data[low_index])
-            {
-                tmp = data[high_index];
-                data[high_index] = data[low_index];
-                data[low_index] = tmp;
-            }
-            if (data[mid] < data[high_index])
-            {
-                tmp = data[high_index];
-                data[high_index] = data[mid];
-                data[mid] = tmp;
-            }
-            pivot = data[high_index];
-            // end {pivot search - Median-of-three}
-
-            // begin {partition array into two}
-            left_index = low_index - 1;
-            right_index = high_index + 1;
-            while (1)
-            {
-                do
-                {
-                    left_index += 1;
-                } while (data[left_index] < pivot);
-                do
-                {
-                    right_index -= 1;
-                } while (data[right_index] > pivot);
-                if (left_index >= right_index)
-                {
-                    pivot_index = right_index;
-                    break;
-                }
-                tmp = data[left_index];
-                data[left_index] = data[right_index];
-                data[right_index] = tmp;
-            }
-            // end {partition array into two}
-            // end {partition}
-
-            // begin {sort partitions}
-            quick_sort(data, low_index, pivot_index);
-            quick_sort(data, pivot_index + 1, high_index);
-            // end {sort partitions}
+            pivot_index = partition(data, begin_index, end_index);
+            quick_sort(data, begin_index, pivot_index);
+            quick_sort(data, pivot_index + 1, end_index);
         }
     }
 
     template <typename T>
-    void intro_sort(T *data, int low_index, int high_index)
+    void sift_down(T *data, int begin_index, int end_index)
     {
+        int swap_index, child_index, root_index;
+        root_index = begin_index;
+        while ((2 * root_index + 1) <= end_index)
+        {
+            child_index = (2 * root_index + 1);
+            swap_index = root_index;
+            if (data[swap_index] < data[child_index])
+                swap_index = child_index;
+            if (child_index + 1 <= end_index && data[swap_index] < data[child_index + 1])
+                swap_index = child_index + 1;
+            if (swap_index == root_index)
+                return;
+            else
+            {
+                swap(data[root_index], data[swap_index]);
+                root_index = swap_index;
+            }
+        }
+    }
+    template <typename T>
+    void heapify(T *data, int data_size)
+    {
+        int begin_index, end_index;
+        end_index = data_size - 1;
+        begin_index = (int)std::floor((end_index - 1) / 2);
+        while (begin_index >= 0)
+        {
+            sift_down(data, begin_index, end_index);
+            begin_index -= 1;
+        }
+    }
+
+    template <typename T>
+    void heap_sort(T *data, int data_size)
+    {
+        int end_index;
+        heapify(data, data_size);
+        end_index = data_size - 1;
+        while (end_index > 0)
+
+        {
+            swap(data[end_index], data[0]);
+            end_index -= 1;
+            sift_down(data, 0, end_index);
+        }
+    }
+    template <typename T>
+    void intro_sort(T *data, int data_size)
+    {
+        int maximum_depth = std::log2(data_size) * 2;
     }
 
     template <typename T>

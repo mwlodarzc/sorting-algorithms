@@ -32,24 +32,24 @@ int median(int *data, int size)
 int main()
 {
 
-    std::string filename = "test.csv";
-    MovieRatingDataset data(filename);
-    for (int i = 0; i < data.size(); i++)
-    {
-        std::cout << data[i] << std::endl;
-    }
+    // std::string filename = "test.csv";
+    // MovieRatingDataset data(filename);
+    // for (int i = 0; i < data.size(); i++)
+    // {
+    //     std::cout << data[i] << std::endl;
+    // }
     // int data[] = {9, 56, 28, 47, 32, 29, 16, 45, 50, 25, 96, 88, 50, 11, 72, 22, 17, 10, 33, 40};
 
-    Sort::quicksort<MovieRatingDataset::MovieRating>(data.get_data(), 0, data.size() - 1);
-    std::cout << std::endl;
-    for (int i = 0; i < data.size(); i++)
-    {
-        std::cout << data[i] << std::endl;
-    }
-    std::cout << std::endl;
-
+    // Sort::heap_sort<MovieRatingDataset::MovieRating>(data.get_data(), data.size());
     // std::cout << std::endl;
-    std::cout << Sort::check_sorted<MovieRatingDataset::MovieRating>(data.get_data(), data.size()) << std::endl;
+    // for (int i = 0; i < data.size(); i++)
+    // {
+    //     std::cout << data[i] << std::endl;
+    // }
+    // std::cout << std::endl;
+
+    // // std::cout << std::endl;
+    // std::cout << Sort::check_sorted<MovieRatingDataset::MovieRating>(data.get_data(), data.size()) << std::endl;
 
     // LinkedList<int> *buckets = new LinkedList<int>[2];
     // LinkedList<int> list;
