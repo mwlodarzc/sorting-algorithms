@@ -1,6 +1,6 @@
 TRGDIR=./
 OBJ=./obj
-FLAGS= -Wall -pedantic -std=c++17 -g -iquote inc
+FLAGS= -Wall -pedantic -std=gnu++2a -g -iquote inc
 
 ${TRGDIR}/a.out: ${OBJ} ${OBJ}/main.o ${OBJ}/MovieRatingDataset.o
 	g++ -o ${TRGDIR}/a.out ${OBJ}/main.o ${OBJ}/MovieRatingDataset.o
