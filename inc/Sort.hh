@@ -17,7 +17,6 @@ namespace Sort
     template <typename T>
     void insertion_sort(T *data, int data_size)
     {
-        T tmp;
         for (int i = 1; i < data_size; i++)
         {
             for (int j = i; j > 0 && data[j] < data[j - 1]; j--)
@@ -166,10 +165,26 @@ namespace Sort
             sift_down(data, 0, end_index);
         }
     }
+
     template <typename T>
-    void intro_sort(T *data, int data_size)
+    void intro_sort(T *data, int data_size, int begin_index = 0, int maximum_depth = 0)
     {
-        int maximum_depth = std::log2(data_size) * 2;
+        int pivot_index;
+        if (begin_index >= 0 && data_size > 0 && begin_index < data_size - 1)
+        {
+            if (maximum_depth == 0)
+                maximum_depth = std::floor(std::log2(data_size)) * 2;
+            if (data_size < 16)
+                insertion_sort(data, data_size);
+            else if (maximum_depth == 0)
+                heap_sort(data, data_size);
+            else
+            {
+                pivot_index = partition(data, 0, data_size - 1);
+                intro_sort(data, pivot_index + 1, 0, maximum_depth - 1);
+                intro_sort(data, data_size - (pivot_index + 1) + 1, pivot_index, maximum_depth - 1);
+            }
+        }
     }
 
     template <typename T>
