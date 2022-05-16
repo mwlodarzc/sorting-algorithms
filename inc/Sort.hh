@@ -82,7 +82,7 @@ namespace Sort
         int left_index, right_index;
         T pivot;
         pivot = median_of_three(data, begin_index, end_index);
-
+        std::cout << "f: " << data[begin_index] << " p: " << pivot << " e: " << data[end_index] << std::endl;
         // begin {partition array into two}
         left_index = begin_index - 1;
         right_index = end_index + 1;
@@ -167,23 +167,40 @@ namespace Sort
     }
 
     template <typename T>
-    void intro_sort(T *data, int data_size, int begin_index = 0, int maximum_depth = 0)
+    void intro_sort(T *data, int data_size, int maximum_depth = 0)
     {
         int pivot_index;
-        if (begin_index >= 0 && data_size > 0 && begin_index < data_size - 1)
+        if (maximum_depth == 0)
+            maximum_depth = std::floor(std::log2(data_size)) * 2;
+
+        // std::cout << std::endl;
+        // for (int i = 0; i < data_size; i++)
+        // {
+        //     std::cout << data[i] << std::endl;
+        // }
+        // std::cout << std::endl;
+        // std::cout << "df: " << *data << " ds: " << data_size << " md: " << maximum_depth << std::endl;
+        if (data_size < 16)
         {
-            if (maximum_depth == 0)
-                maximum_depth = std::floor(std::log2(data_size)) * 2;
-            if (data_size < 16)
-                insertion_sort(data, data_size);
-            else if (maximum_depth == 0)
-                heap_sort(data, data_size);
-            else
-            {
-                pivot_index = partition(data, 0, data_size - 1);
-                intro_sort(data, pivot_index + 1, 0, maximum_depth - 1);
-                intro_sort(data, data_size - (pivot_index + 1) + 1, pivot_index, maximum_depth - 1);
-            }
+            insertion_sort(data, data_size);
+            // std::cout << "insertion_sort \n"
+            //           << std::endl;
+        }
+        else if (maximum_depth == 0)
+        {
+            heap_sort(data, data_size);
+            // std::cout << "heap_sort \n"
+            //           << std::endl;
+        }
+        else
+        {
+            // std::cout << "intro_sort" << std::endl;
+            pivot_index = partition(data, 0, data_size - 1);
+            // std::cout << "pi: " << pivot_index << " dpi: " << data[pivot_index] << " d0: " << *data << std::endl;
+            intro_sort(data, pivot_index + 1, maximum_depth - 1);
+            // std::cout << "pi: " << pivot_index << " "
+            //   << " dpi: " << data[pivot_index] << " d_ds-pi: " << data[data_size - pivot_index] << std::endl;
+            intro_sort(data + pivot_index + 1, data_size - pivot_index - 1, maximum_depth - 1);
         }
     }
 
