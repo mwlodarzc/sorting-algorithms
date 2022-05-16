@@ -1,64 +1,13 @@
 #include "MovieRatingDataset.hh"
 
-bool MovieRatingDataset::MovieRating::operator>(const MovieRating &compared)
-{
-    if (rating > compared.rating)
-        return true;
-    return false;
-}
-bool MovieRatingDataset::MovieRating::operator>=(const MovieRating &compared)
-{
-    if (rating >= compared.rating)
-        return true;
-    return false;
-}
-bool MovieRatingDataset::MovieRating::operator<(const MovieRating &compared)
-{
-    if (rating < compared.rating)
-        return true;
-    return false;
-}
-bool MovieRatingDataset::MovieRating::operator<=(const MovieRating &compared)
-{
-    if (rating <= compared.rating)
-        return true;
-    return false;
-}
-bool MovieRatingDataset::MovieRating::operator==(const MovieRating &compared)
-{
-    if (rating == compared.rating)
-        return true;
-    return false;
-}
-bool MovieRatingDataset::MovieRating::operator!=(const MovieRating &compared)
-{
-    if (rating != compared.rating)
-        return true;
-    return false;
-}
-
-double MovieRatingDataset::MovieRating::operator/(const MovieRating &compared) { return rating / compared.rating; }
-double MovieRatingDataset::MovieRating::operator*(const MovieRating &compared) { return rating * compared.rating; }
-double MovieRatingDataset::MovieRating::operator*(double multiplied) { return rating * multiplied; }
-int MovieRatingDataset::MovieRating::operator*(int multiplied) { return rating * multiplied; }
-double MovieRatingDataset::MovieRating::operator/(double divided) { return rating / divided; }
-double MovieRatingDataset::MovieRating::operator/(int divided) { return rating / divided; }
-int MovieRatingDataset::MovieRating::operator+(int added) { return rating + added; }
-double MovieRatingDataset::MovieRating::operator+(double added) { return rating + added; }
-double MovieRatingDataset::MovieRating::operator+=(double added) { return rating = rating + added; }
-int operator*(double multiplied, MovieRatingDataset::MovieRating data) { return multiplied * data.rating; }
-int operator*(int multiplied, MovieRatingDataset::MovieRating data) { return multiplied * data.rating; }
-int operator/(double multiplied, MovieRatingDataset::MovieRating data) { return multiplied / data.rating; }
-int operator/(int multiplied, MovieRatingDataset::MovieRating data) { return multiplied / data.rating; }
-
 std::ostream &
-operator<<(std::ostream &strm, const MovieRatingDataset::MovieRating &elem)
+operator<<(std::ostream &strm, MovieRating &elem)
 {
-    strm << elem.title << " " << elem.rating;
+    strm << elem.get_title() << " " << elem.get_rating();
     return strm;
 }
 
-MovieRatingDataset::MovieRating &MovieRatingDataset::operator[](int index)
+MovieRating &MovieRatingDataset::operator[](int index)
 {
     if (index < 0 || index >= data_size)
     {
@@ -73,6 +22,11 @@ int MovieRatingDataset::file_length()
     std::ifstream file;
     std::string unused_data;
     file.open(file_name);
+    if (!file)
+    {
+        std::cerr << "Error: file cant be opened" << std::endl;
+        exit(1);
+    }
     int num_lines = 0;
     while (!file.eof())
     {
@@ -86,7 +40,7 @@ bool MovieRatingDataset::data_completion()
 {
     for (int i = 0; i < data_size; i++)
     {
-        if (data[i].rating == 0)
+        if (data[i].get_rating() == 0)
         {
             return false;
         }
@@ -98,19 +52,20 @@ void MovieRatingDataset::filter()
 {
     for (int index = 0, empty_data = 0; index < data_size; index++)
     {
-        if (data[index].rating == 0)
+        if (data[index].get_rating() == 0)
             empty_data++;
         data[index] = data[index + empty_data];
     }
 }
 
-MovieRatingDataset::MovieRating *MovieRatingDataset::load_data()
+MovieRating *MovieRatingDataset::load_data()
 {
-    MovieRating *data = new MovieRating[data_size];
     std::ifstream file;
     std::string tmp, tmp2;
+    MovieRating *data = new MovieRating[data_size];
 
     file.open(file_name);
+
     if (!file)
     {
         std::cerr << "Error: file cant be opened" << std::endl;
@@ -124,16 +79,41 @@ MovieRatingDataset::MovieRating *MovieRatingDataset::load_data()
         if (tmp[0] == '"')
         {
             std::getline(file, tmp2, '"');
-            data[i].title = tmp + ',' + tmp2 + '"';
+            data[i].set_title(tmp + ',' + tmp2 + '"');
             std::getline(file, tmp, ',');
         }
         else
         {
-            data[i].title = tmp;
+            data[i].set_title(tmp);
         }
         std::getline(file, tmp, '\n');
-        data[i].rating = atoi(tmp.c_str());
+        data[i].set_rating(atoi(tmp.c_str()));
     }
     file.close();
     return data;
+}
+// needs testing
+MovieRating *MovieRatingDataset::n_random(int n)
+{
+    int random_index, tmp_size = data_size;
+    MovieRating *tmp = new MovieRating[data_size];
+    MovieRating *randomized = new MovieRating[n];
+    for (int i = 0; i < data_size; i++)
+    {
+        tmp[i] = data[i];
+    }
+    srand(time(NULL));
+    for (int i = 0; i < n; i++)
+    {
+        random_index = rand() % tmp_size;
+        randomized[i] = data[random_index];
+        for (int i = random_index; i < tmp_size; i++)
+        {
+            tmp[i] = tmp[i + 1];
+        }
+        tmp_size--;
+
+    }
+    delete[] tmp;
+    return randomized;
 }

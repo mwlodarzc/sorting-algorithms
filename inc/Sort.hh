@@ -82,7 +82,7 @@ namespace Sort
         int left_index, right_index;
         T pivot;
         pivot = median_of_three(data, begin_index, end_index);
-        std::cout << "f: " << data[begin_index] << " p: " << pivot << " e: " << data[end_index] << std::endl;
+        // std::cout << "f: " << data[begin_index] << " p: " << pivot << " e: " << data[end_index] << std::endl;
         // begin {partition array into two}
         left_index = begin_index - 1;
         right_index = end_index + 1;
@@ -178,19 +178,20 @@ namespace Sort
         // {
         //     std::cout << data[i] << std::endl;
         // }
+
         // std::cout << std::endl;
         // std::cout << "df: " << *data << " ds: " << data_size << " md: " << maximum_depth << std::endl;
         if (data_size < 16)
         {
             insertion_sort(data, data_size);
             // std::cout << "insertion_sort \n"
-            //           << std::endl;
+            //   << std::endl;
         }
         else if (maximum_depth == 0)
         {
             heap_sort(data, data_size);
             // std::cout << "heap_sort \n"
-            //           << std::endl;
+            //   << std::endl;
         }
         else
         {
@@ -200,9 +201,12 @@ namespace Sort
             intro_sort(data, pivot_index + 1, maximum_depth - 1);
             // std::cout << "pi: " << pivot_index << " "
             //   << " dpi: " << data[pivot_index] << " d_ds-pi: " << data[data_size - pivot_index] << std::endl;
-            intro_sort(data + pivot_index + 1, data_size - pivot_index - 1, maximum_depth - 1);
+            intro_sort(data + pivot_index + 1, data_size - (pivot_index + 1), maximum_depth - 1);
         }
     }
+    // works for everything
+    // intro_sort(data, pivot_index + 1, maximum_depth - 1);
+    // intro_sort(data + pivot_index + 1, data_size - pivot_index - 1, maximum_depth - 1);
 
     template <typename T>
     bool check_sorted(T *data, int data_size)

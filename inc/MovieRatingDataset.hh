@@ -3,31 +3,12 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cstdlib>
+#include <ctime>
+#include "MovieRating.hh"
 
 class MovieRatingDataset
 {
-public:
-    struct MovieRating
-    {
-        std::string title;
-        int rating;
-        bool operator>(const MovieRating &compared);
-        bool operator>=(const MovieRating &compared);
-        bool operator<(const MovieRating &compared);
-        bool operator<=(const MovieRating &compared);
-        bool operator==(const MovieRating &compared);
-        bool operator!=(const MovieRating &compared);
-        double operator/(const MovieRating &compared);
-        double operator*(const MovieRating &compared);
-        double operator+=(double added);
-        int operator+(int added);
-        double operator+(double added);
-        double operator*(double multiplied);
-        int operator*(int multiplied);
-        double operator/(double divided);
-        double operator/(int divided);
-    };
-
 private:
     std::string file_name;
     int data_size;
@@ -43,11 +24,8 @@ public:
     void filter();
     MovieRating *load_data();
     int size() { return data_size; }
+    MovieRating *n_random(int n);
 };
-std::ostream &operator<<(std::ostream &strm, const MovieRatingDataset::MovieRating &elem);
-int operator*(double multiplied, MovieRatingDataset::MovieRating data);
-int operator*(int multiplied, MovieRatingDataset::MovieRating data);
-int operator/(double multiplied, MovieRatingDataset::MovieRating data);
-int operator/(int multiplied, MovieRatingDataset::MovieRating data);
+std::ostream &operator<<(std::ostream &strm, MovieRating &elem);
 
 #endif
