@@ -72,12 +72,12 @@ int main()
 {
     std::chrono::duration<double> elapsed;
     std::chrono::_V2::system_clock::time_point begin, bf, end, ef;
-    std::string outname = "tests/test_size_", filename = "data/larger_test.csv";
+    std::string outname = "tests/test_size_", filename = "data/projekt2_dane.csv";
     MovieRatingDataset data(filename);
-    MovieRating *test;
-    // int test_size[] = {10000, 100000, 500000, 1000000, data.size()};
-    int test_size[] = {10, 20, 30, 4,data.size()};
-    int filter_size;
+    // MovieRating *test;
+    int test_size[] = {10000, 100000, 500000, 1000000, data.size()};
+    // int test_size[] = {100, 200, 300, 400, data.size()};
+    // int filter_size;
     std::fstream output_file, program_runtime;
     int data_size_number = 5, test_tries_number = 30;
 
@@ -87,26 +87,26 @@ int main()
     // ###################################################################################
     // ################## PKT.1 - FILTROWANIE DANYCH #####################################
     // ###################################################################################
-    begin = std::chrono::high_resolution_clock::now();
-    output_file.open("tests/filtrowanie.txt", std::ios::app);
-    if (!output_file)
-        std::cerr << "File doesnt exist!";
-    for (int i = 0; i < data_size_number; i++)
-    {
-        filter_size = test_size[i];
-        test = data.n_random(filter_size);
-        bf = std::chrono::high_resolution_clock::now();
-        filter_size = (Sort::filter(test, filter_size));
-        ef = std::chrono::high_resolution_clock::now();
-        output_file << "Done " << test_size[i] << " " << filter_size << ": " << Sort::complete(test, filter_size) << std::endl;
-        elapsed = ef - bf;
-        output_file << "Czas filtrowania: " << elapsed.count() << std::endl;
-    }
-    output_file.close();
-    // ###################################################################################
-    end = std::chrono::high_resolution_clock::now();
-    elapsed = end - begin;
-    program_runtime << "Czas filtrowania danych: " << elapsed.count() << std::endl;
+    // begin = std::chrono::high_resolution_clock::now();
+    // output_file.open("tests/filtrowanie.txt", std::ios::app);
+    // if (!output_file)
+    //     std::cerr << "File doesnt exist!";
+    // for (int i = 0; i < data_size_number; i++)
+    // {
+    //     filter_size = test_size[i];
+    //     test = data.n_random(filter_size);
+    //     bf = std::chrono::high_resolution_clock::now();
+    //     filter_size = (Sort::filter(test, filter_size));
+    //     ef = std::chrono::high_resolution_clock::now();
+    //     output_file << "Done " << test_size[i] << " " << filter_size << ": " << Sort::complete(test, filter_size) << std::endl;
+    //     elapsed = ef - bf;
+    //     output_file << "Czas filtrowania: " << elapsed.count() << std::endl;
+    // }
+    // output_file.close();
+    // // ###################################################################################
+    // end = std::chrono::high_resolution_clock::now();
+    // elapsed = end - begin;
+    // program_runtime << "Czas filtrowania danych: " << elapsed.count() << std::endl;
     // ###################################################################################
     // ################## PKT.2 - ANALIZA EFEKTYWNOŚCI SORTOWANIA ########################
     // ###################################################################################
