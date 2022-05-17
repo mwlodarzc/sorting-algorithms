@@ -1,0 +1,2 @@
+Czas analizy efektywności: 623.971
+Czas filtrowania danych: 5031.8

@@ -103,7 +103,6 @@ namespace Sort
         int left_index, right_index;
         T pivot;
         pivot = median_of_three(data, begin_index, end_index);
-        // std::cout << "f: " << data[begin_index] << " p: " << pivot << " e: " << data[end_index] << std::endl;
         // begin {partition array into two}
         left_index = begin_index - 1;
         right_index = end_index + 1;
@@ -124,7 +123,6 @@ namespace Sort
         // end {partition array into two}
     }
 
-    // run tests check if it works correctly try some shit
     template <typename T>
     void quick_sort(T *data, int begin_index, int end_index)
     {
@@ -193,41 +191,21 @@ namespace Sort
         int pivot_index;
         if (maximum_depth == 0)
             maximum_depth = std::floor(std::log2(data_size)) * 2;
-
-        // std::cout << std::endl;
-        // for (int i = 0; i < data_size; i++)
-        // {
-        //     std::cout << data[i] << std::endl;
-        // }
-
-        // std::cout << std::endl;
-        // std::cout << "df: " << *data << " ds: " << data_size << " md: " << maximum_depth << std::endl;
         if (data_size < 16)
         {
             insertion_sort(data, data_size);
-            // std::cout << "insertion_sort \n"
-            //   << std::endl;
         }
         else if (maximum_depth == 0)
         {
             heap_sort(data, data_size);
-            // std::cout << "heap_sort \n"
-            //   << std::endl;
         }
         else
         {
-            // std::cout << "intro_sort" << std::endl;
             pivot_index = partition(data, 0, data_size - 1);
-            // std::cout << "pi: " << pivot_index << " dpi: " << data[pivot_index] << " d0: " << *data << std::endl;
             intro_sort(data, pivot_index + 1, maximum_depth - 1);
-            // std::cout << "pi: " << pivot_index << " "
-            //   << " dpi: " << data[pivot_index] << " d_ds-pi: " << data[data_size - pivot_index] << std::endl;
             intro_sort(data + pivot_index + 1, data_size - (pivot_index + 1), maximum_depth - 1);
         }
     }
-    // works for everything
-    // intro_sort(data, pivot_index + 1, maximum_depth - 1);
-    // intro_sort(data + pivot_index + 1, data_size - pivot_index - 1, maximum_depth - 1);
 
     template <typename T>
     bool check_sorted(T *data, int data_size)

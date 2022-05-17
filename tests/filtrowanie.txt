@@ -1,0 +1,10 @@
+Done 10000 9519: 1
+Czas filtrowania: 0.0997513
+Done 100000 95219: 1
+Czas filtrowania: 16.7491
+Done 500000 476853: 1
+Czas filtrowania: 564.669
+Done 1000000 952982: 1
+Czas filtrowania: 2331.64
+Done 1010293 962796: 1
+Czas filtrowania: 2114.14
