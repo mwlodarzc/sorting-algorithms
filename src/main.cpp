@@ -72,14 +72,14 @@ int main()
 {
     std::chrono::duration<double> elapsed;
     std::chrono::_V2::system_clock::time_point begin, bf, end, ef;
-    std::string outname = "tests/test_size_", filename = "data/projekt2_dane.csv";
+    std::string outname = "tests/test_size_", filename = "data/larger_test.csv";
     MovieRatingDataset data(filename);
     MovieRating *test;
-    int test_size[] = {10000, 100000, 500000, 1000000};
-    // int test_size[] = {1, 5, 7, 10};
+    // int test_size[] = {10000, 100000, 500000, 1000000, data.size()};
+    int test_size[] = {10, 20, 30, 4,data.size()};
     int filter_size;
     std::fstream output_file, program_runtime;
-    int data_size_number = 4, test_tries_number = 30;
+    int data_size_number = 5, test_tries_number = 30;
 
     program_runtime.open("tests/program_runtime.txt", std::ios::app);
     if (!program_runtime)
@@ -98,16 +98,10 @@ int main()
         bf = std::chrono::high_resolution_clock::now();
         filter_size = (Sort::filter(test, filter_size));
         ef = std::chrono::high_resolution_clock::now();
-        output_file << "Done " << filter_size << ": " << Sort::complete(test, filter_size) << std::endl;
+        output_file << "Done " << test_size[i] << " " << filter_size << ": " << Sort::complete(test, filter_size) << std::endl;
         elapsed = ef - bf;
         output_file << "Czas filtrowania: " << elapsed.count() << std::endl;
     }
-    bf = std::chrono::high_resolution_clock::now();
-    data.set_size((Sort::filter(data.get_data(), data.size())));
-    ef = std::chrono::high_resolution_clock::now();
-    output_file << "Done " << data.size() << ": " << Sort::complete(data.get_data(), data.size()) << std::endl;
-    elapsed = ef - bf;
-    output_file << "Czas filtrowania: " << elapsed.count() << std::endl;
     output_file.close();
     // ###################################################################################
     end = std::chrono::high_resolution_clock::now();
@@ -127,13 +121,6 @@ int main()
             test_algorithms(data, test_size[i], output_file);
         output_file.close();
     }
-    output_file.open(outname + std::to_string(data.size()) + "_max.txt", std::ios::app);
-    if (!output_file)
-        std::cerr << "File doesnt exist!";
-    output_file << "bucket_sort, poprawny, quick_sort, poprawny, intro_sort-czas, poprawny, mediana_data, średnia_data" << std::endl;
-    for (int j = 0; j < test_tries_number; j++)
-        test_algorithms(data, data.size(), output_file);
-    output_file.close();
     end = std::chrono::high_resolution_clock::now();
     // ###################################################################################
     elapsed = end - begin;
