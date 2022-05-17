@@ -36,28 +36,6 @@ int MovieRatingDataset::file_length()
     return num_lines;
 }
 
-bool MovieRatingDataset::data_completion()
-{
-    for (int i = 0; i < data_size; i++)
-    {
-        if (data[i].get_rating() == 0)
-        {
-            return false;
-        }
-    }
-    return true;
-}
-
-void MovieRatingDataset::filter()
-{
-    for (int index = 0, empty_data = 0; index < data_size; index++)
-    {
-        if (data[index].get_rating() == 0)
-            empty_data++;
-        data[index] = data[index + empty_data];
-    }
-}
-
 MovieRating *MovieRatingDataset::load_data()
 {
     std::ifstream file;
@@ -95,24 +73,22 @@ MovieRating *MovieRatingDataset::load_data()
 // needs testing
 MovieRating *MovieRatingDataset::n_random(int n)
 {
-    int random_index, tmp_size = data_size;
+    int random_index;
     MovieRating *tmp = new MovieRating[data_size];
     MovieRating *randomized = new MovieRating[n];
+    srand(time(NULL));
     for (int i = 0; i < data_size; i++)
     {
         tmp[i] = data[i];
     }
-    srand(time(NULL));
+    for (int i = 0; i < data_size; i++)
+    {
+        random_index = rand() % data_size;
+        Sort::swap(tmp[i], tmp[random_index]);
+    }
     for (int i = 0; i < n; i++)
     {
-        random_index = rand() % tmp_size;
-        randomized[i] = data[random_index];
-        for (int i = random_index; i < tmp_size; i++)
-        {
-            tmp[i] = tmp[i + 1];
-        }
-        tmp_size--;
-
+        randomized[i] = tmp[i];
     }
     delete[] tmp;
     return randomized;

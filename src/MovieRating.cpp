@@ -1,41 +1,12 @@
 #include "MovieRating.hh"
-bool MovieRating::operator>(const MovieRating &compared)
-{
-    if (rating > compared.rating)
-        return true;
-    return false;
-}
-bool MovieRating::operator>=(const MovieRating &compared)
-{
-    if (rating >= compared.rating)
-        return true;
-    return false;
-}
-bool MovieRating::operator<(const MovieRating &compared)
-{
-    if (rating < compared.rating)
-        return true;
-    return false;
-}
-bool MovieRating::operator<=(const MovieRating &compared)
-{
-    if (rating <= compared.rating)
-        return true;
-    return false;
-}
-bool MovieRating::operator==(const MovieRating &compared)
-{
-    if (rating == compared.rating)
-        return true;
-    return false;
-}
-bool MovieRating::operator!=(const MovieRating &compared)
-{
-    if (rating != compared.rating)
-        return true;
-    return false;
-}
-
+bool MovieRating::operator>(const MovieRating &compared) { return rating > compared.rating; }
+bool MovieRating::operator>=(const MovieRating &compared) { return rating >= compared.rating; }
+bool MovieRating::operator<(const MovieRating &compared) { return rating < compared.rating; }
+bool MovieRating::operator<=(const MovieRating &compared) { return rating <= compared.rating; }
+bool MovieRating::operator==(const MovieRating &compared) { return rating == compared.rating; }
+bool MovieRating::operator!=(const MovieRating &compared) { return rating != compared.rating; }
+bool MovieRating::operator==(int compared) { return rating == compared; }
+bool MovieRating::operator!=(int compared) { return rating != compared; }
 double MovieRating::operator/(const MovieRating &compared) { return rating / compared.rating; }
 double MovieRating::operator*(const MovieRating &compared) { return rating * compared.rating; }
 double MovieRating::operator*(double multiplied) { return rating * multiplied; }

@@ -43,7 +43,7 @@ void test_algorithms(MovieRatingDataset &data, int data_size, std::fstream &out_
     Sort::bucket_sort<MovieRating>(tmp, data_size, 10);
     end = std::chrono::high_resolution_clock::now();
 
-    elapsed = begin - end;
+    elapsed = end - begin;
     out_file << elapsed.count() << "," << Sort::check_sorted<MovieRating>(tmp, data_size) << ",";
     delete[] tmp;
 
@@ -52,7 +52,7 @@ void test_algorithms(MovieRatingDataset &data, int data_size, std::fstream &out_
     Sort::quick_sort<MovieRating>(tmp, 0, data_size - 1);
     end = std::chrono::high_resolution_clock::now();
 
-    elapsed = begin - end;
+    elapsed = end - begin;
     out_file << elapsed.count() << "," << Sort::check_sorted<MovieRating>(tmp, data_size) << ",";
     delete[] tmp;
 
@@ -61,7 +61,7 @@ void test_algorithms(MovieRatingDataset &data, int data_size, std::fstream &out_
     Sort::intro_sort<MovieRating>(tmp, data_size);
     end = std::chrono::high_resolution_clock::now();
 
-    elapsed = begin - end;
+    elapsed = end - begin;
     out_file << elapsed.count() << "," << Sort::check_sorted<MovieRating>(tmp, data_size) << ",";
     delete[] tmp;
 
@@ -70,74 +70,74 @@ void test_algorithms(MovieRatingDataset &data, int data_size, std::fstream &out_
 
 int main()
 {
-
-    std::string filename = "data/projekt2_dane.csv";
+    std::chrono::duration<double> elapsed;
+    std::chrono::_V2::system_clock::time_point begin, bf, end, ef;
+    std::string outname = "tests/test_size_", filename = "data/projekt2_dane.csv";
     MovieRatingDataset data(filename);
-    int tested_size = 100;
-    // MovieRating *tested_data = data.n_random(tested_size);
-    // int test_size[] = {10000, 100000, 500000, 1000000};
-    std::fstream output_file;
-    // for (int i = 0; i < 4; i++)
-    // {
-    output_file.open("tests/test1", std::ios::app);
-    if (!output_file)
-    {
+    MovieRating *test;
+    int test_size[] = {10000, 100000, 500000, 1000000};
+    // int test_size[] = {1, 5, 7, 10};
+    int filter_size;
+    std::fstream output_file, program_runtime;
+    int data_size_number = 4, test_tries_number = 30;
+
+    program_runtime.open("tests/program_runtime.txt", std::ios::app);
+    if (!program_runtime)
         std::cerr << "File doesnt exist!";
+    // ###################################################################################
+    // ################## PKT.1 - FILTROWANIE DANYCH #####################################
+    // ###################################################################################
+    begin = std::chrono::high_resolution_clock::now();
+    output_file.open("tests/filtrowanie.txt", std::ios::app);
+    if (!output_file)
+        std::cerr << "File doesnt exist!";
+    for (int i = 0; i < data_size_number; i++)
+    {
+        filter_size = test_size[i];
+        test = data.n_random(filter_size);
+        bf = std::chrono::high_resolution_clock::now();
+        filter_size = (Sort::filter(test, filter_size));
+        ef = std::chrono::high_resolution_clock::now();
+        output_file << "Done " << filter_size << ": " << Sort::complete(test, filter_size) << std::endl;
+        elapsed = ef - bf;
+        output_file << "Czas filtrowania: " << elapsed.count() << std::endl;
     }
-    //     output_file << "bucket_sort, poprawny, quick_sort, poprawny, intro_sort-czas, poprawny, mediana_data, średnia_data" << std::endl;
-    // }
-
-    // for (int i = 0; i < tested_size; i++)
-    // {
-    //     std::cout << tested_data[i] << std::endl;
-    // }
-    // std::cout << std::endl;
-
-    // std::cout << std::endl;
-    // std::cout << *(data.get_data() + 2) << std::endl;
-    // slice(data, 10);
-    // Sort::intro_sort<int>(data, 20);
-
-    // Sort::intro_sort<MovieRating>(tested_data, 100, 20);
-    // std::cout << Sort::check_sorted<MovieRating>(tested_data, 100) << std::endl;
-
-    // // std::cout << data [0..2:1] << std::endl;
-    // std::cout << std::endl;
-    test_algorithms(data, tested_size, output_file);
-
-    // for (int i = 0; i < 100; i++)
-    // {
-    //     std::cout << tested_data[i] << std::endl;
-    // }
-    // for (int i = 0; i < 10; i++)
-    // {
-    //     std::cout << tested_data[i] << std::endl;
-    // }
-    // std::cout << std::endl;
-
-    // // // std::cout << std::endl;
-    // int data[] = {1, 2, 3, 4, 5, 6, 7, 8};
-    // std::cout << median(tested_data, tested_size) << " " << mean(tested_data, tested_size) << std::endl;
-    // Sort::intro_sort<int>(data, 20);
-    // std::cout << Sort::check_sorted<int>(data, 20) << std::endl;
+    bf = std::chrono::high_resolution_clock::now();
+    data.set_size((Sort::filter(data.get_data(), data.size())));
+    ef = std::chrono::high_resolution_clock::now();
+    output_file << "Done " << data.size() << ": " << Sort::complete(data.get_data(), data.size()) << std::endl;
+    elapsed = ef - bf;
+    output_file << "Czas filtrowania: " << elapsed.count() << std::endl;
+    output_file.close();
+    // ###################################################################################
+    end = std::chrono::high_resolution_clock::now();
+    elapsed = end - begin;
+    program_runtime << "Czas filtrowania danych: " << elapsed.count() << std::endl;
+    // ###################################################################################
+    // ################## PKT.2 - ANALIZA EFEKTYWNOŚCI SORTOWANIA ########################
+    // ###################################################################################
+    begin = std::chrono::high_resolution_clock::now();
+    for (int i = 0; i < data_size_number; i++)
+    {
+        output_file.open(outname + std::to_string(test_size[i]) + ".txt", std::ios::app);
+        if (!output_file)
+            std::cerr << "File doesnt exist!";
+        output_file << "bucket_sort, poprawny, quick_sort, poprawny, intro_sort-czas, poprawny, mediana_data, średnia_data" << std::endl;
+        for (int j = 0; j < test_tries_number; j++)
+            test_algorithms(data, test_size[i], output_file);
+        output_file.close();
+    }
+    output_file.open(outname + std::to_string(data.size()) + "_max.txt", std::ios::app);
+    if (!output_file)
+        std::cerr << "File doesnt exist!";
+    output_file << "bucket_sort, poprawny, quick_sort, poprawny, intro_sort-czas, poprawny, mediana_data, średnia_data" << std::endl;
+    for (int j = 0; j < test_tries_number; j++)
+        test_algorithms(data, data.size(), output_file);
+    output_file.close();
+    end = std::chrono::high_resolution_clock::now();
+    // ###################################################################################
+    elapsed = end - begin;
+    program_runtime << "Czas analizy efektywności: " << elapsed.count() << std::endl;
+    program_runtime.close();
     return EXIT_SUCCESS;
 }
-
-// template <typename T>
-// void slice(T *data, int data_size)
-// {
-//     for (int i = 0; i < data_size; i++)
-//     {
-//         std::cout << data[i] << std::endl;
-//     }
-//     std::cout << std::endl;
-//     int pivot;
-//     pivot = data_size / 2;
-//     std::cout << data_size << " " << pivot << std::endl;
-//     std::cout << std::endl;
-//     if (data_size > 1)
-//     {
-//         slice(data, pivot);
-//         slice(data + pivot, data_size - (pivot));
-//     }
-// }

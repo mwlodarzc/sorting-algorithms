@@ -20,7 +20,9 @@ public:
     bool operator<(const MovieRating &compared);
     bool operator<=(const MovieRating &compared);
     bool operator==(const MovieRating &compared);
+    bool operator==(int compared);
     bool operator!=(const MovieRating &compared);
+    bool operator!=(int compared);
     double operator/(const MovieRating &compared);
     double operator*(const MovieRating &compared);
     double operator+(const MovieRating &added);

@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <ctime>
 #include "MovieRating.hh"
+#include "Sort.hh"
 
 class MovieRatingDataset
 {
@@ -20,10 +21,9 @@ public:
     MovieRating &operator[](int index);
     MovieRating *get_data() { return data; }
     int file_length();
-    bool data_completion();
-    void filter();
     MovieRating *load_data();
     int size() { return data_size; }
+    void set_size(int size) { data_size = size; }
     MovieRating *n_random(int n);
 };
 std::ostream &operator<<(std::ostream &strm, MovieRating &elem);

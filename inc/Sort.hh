@@ -26,11 +26,32 @@ namespace Sort
         }
     }
 
-    // working
-    // there is one unresolved thing i add plus 1 to maximum to make the maximum value less than the bucket_number;
-    // std::cout << data[i] << " " << (int)std::floor(bucket_number * data[i] / max_key) << std::endl;
-    // std::cout << buckets[i].front() << std::endl;
-    // std::cout << std::endl;
+    template <typename T>
+    bool complete(T *data, int size)
+    {
+        for (int i = 0; i < size; i++)
+            if (data[i] == 0)
+                return false;
+        return true;
+    }
+
+    template <typename T>
+    int filter(T *data, int size)
+    {
+        for (int i = 0, empty = 0; i < size; i++)
+        {
+            if (data[i] == 0)
+            {
+                while (data[i + empty] == 0)
+                    empty++;
+                for (int j = i; j + empty < size; j++)
+                    data[j] = data[j + empty];
+                size -= empty;
+                empty = 0;
+            }
+        }
+        return size;
+    }
 
     template <typename T>
     void bucket_sort(T *data, int size, int bucket_number)
